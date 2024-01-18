@@ -72,7 +72,7 @@ public class Solutions {
         Arrays.sort(intervals, new Comparator<int[]>() {
             @Override
             public int compare(int[] o1, int[] o2) {
-                return o1[0]-o2[0];
+                return o1[0] - o2[0];
             }
         });//重写了比较器 把二维数组按照第一个元素来升序排列
         List<int[]> merged = new ArrayList<int[]>();
@@ -90,15 +90,64 @@ public class Solutions {
         return merged.toArray(new int[merged.size()][]);
     }
 
-//          15.轮转数组
+    //          15.轮转数组
     public void rotate(int[] nums, int k) {
         int n = nums.length;
-        int[] temp=new int[n];
+        int[] temp = new int[n];
         for (int i = 0; i < n; i++) {
-            temp[(i+k)%n]=nums[i];
+            temp[(i + k) % n] = nums[i];
         }
-        System.arraycopy(temp,0,nums,0,n);
+        System.arraycopy(temp, 0, nums, 0, n);
     }
 //    很简单一道题目 类似循环列表 算出来移动后的坐标后 开一个新数组来存 最后memcopy就行
 //    要注意的点就是System.arraycopy五个参数 还有%运算优先级高于+ 写的时候要记得带括号
+
+
+//              16.除自身以外数组的乘积
+    public int[] productExceptSelf(int[] nums) {
+        int n= nums.length;
+        int[] L=new int[n];
+        int[] R=new int[n];
+        int[] ans=new int[n];
+//开了一个前缀积数组 一个后缀积数组 一个答案数组
+        L[0]=1;
+        for (int i = 1; i <n ; i++) {
+            L[i]=L[i-1]*nums[i-1];
+        }
+//L[]是处理i位置的前缀 由于L[0]=1
+// 所以L中所有位置都比nums大1 即L[i]=L[i-1]*nums[i-1]
+        R[n-1]=1;
+        for (int i = n-2; i>=0; i--) {
+            R[i]=R[i+1]*nums[i+1];
+        }
+//R[]是处理i位置的后缀 由于R[n-1]=1
+// 所以R中所有位置都比nums小1 即R[i]=R[i+1]*nums[i+1]
+        for (int i = 0; i < n; i++) {
+            ans[i]=L[i]*R[i];
+        }
+//        最后遍历把L R的值相乘得到答案即可
+        return ans;
+    }
+
+
+//    41.缺失的第一个正数
+    public int firstMissingPositive(int[] nums) {
+        int n =nums.length;
+        for (int i = 0; i < n; i++) {
+            if (nums[i]<=0)
+                nums[i]=n+1;
+        }
+        for (int i = 0; i < n; i++) {
+            int num=Math.abs(nums[i]);
+            if (num<=n){
+                nums[num-1]=-Math.abs(nums[num-1]);
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            if (nums[i]>0)
+                return i+1;
+        }
+        return 1+n;
+    }
+
 }
