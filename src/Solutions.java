@@ -150,4 +150,46 @@ public class Solutions {
         return 1+n;
     }
 
+
+    //    18.矩阵置零
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        boolean[] row=new boolean[m];
+        boolean[] col = new boolean[n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j]==0)
+                    row[i]=col[j]=true;
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (col[j]||row[i])
+                    matrix[i][j]=0;
+            }
+        }
+    }
+
+//    19.螺旋矩阵
+    public List<Integer> spiralOrder(int[][] matrix) {
+        int m=matrix.length;
+        int n=matrix[0].length;
+        List<Integer> ans =new ArrayList<Integer>();
+        int t=0,b=m-1,l=0,r=n-1;
+        while (true){
+            for (int i = l; i <= r; i++) ans.add(matrix[t][i]);
+            if (++t>b) break;
+            for (int i = t; i <= b; i++) ans.add(matrix[i][r]);
+            if (--r<l) break;
+            for (int i = r; i >= l; i--) ans.add(matrix[b][i]);
+            if (--b<t) break;
+            for (int i = b; i >= t; i--) ans.add(matrix[i][l]);
+            if (++l>r) break;
+        }
+        return ans;
+    }
+
+
 }
