@@ -75,7 +75,7 @@ public class Solutions {
                 return o1[0] - o2[0];
             }
         });//重写了比较器 把二维数组按照第一个元素来升序排列
-        List<int[]> merged = new ArrayList<int[]>();
+        List<int[]> merged = new ArrayList<>();
         for (int[] interval : intervals) {
             int L = interval[0];
             int R = interval[1];
@@ -191,5 +191,88 @@ public class Solutions {
         return ans;
     }
 
+//  20.旋转图像
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        int[][] matrix_new = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix_new[j][n-i-1] = matrix[i][j];
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(matrix_new[i], 0, matrix[i], 0, n);
+        }//用arraycopy会性能更好一点
+    }
 
+//    21.搜索二维矩阵II
+    public boolean searchMatrix(int[][] matrix, int target) {
+        for (int[]num:matrix) {
+            for (int i : num) {
+                if (i==target)
+                    return true;
+            }
+        }
+        return false;
+    }
+//    最简单的暴力解法 直接迭代器遍历 两重循环找target 复杂度O(MN)
+//    解法二：利用元素的有序性进行二分查找
+    public boolean searchMatrix_1(int[][] matrix, int target) {
+        for (int[] nums : matrix) {
+            int index = binary_search(nums, target);
+            if (index >= 0)
+                return true;
+        }
+        return false;
+    }
+
+        private int binary_search(int[] nums, int target) {
+            int low = 0, high = nums.length - 1;
+            while (low <= high) {
+                int mid = (low + high) / 2;
+                int num = nums[mid];
+                if (num == target)
+                    return mid;
+                else if (target < num) {
+//      注意这里比较的是target和num的值 而不是target和mid 写错就GG；
+                    low = mid + 1;
+                } else
+                    high = mid - 1;
+            }
+            return -1;
+        }
+
+//      解法三：Z字形查找
+    public boolean searchMatrix_2(int[][] matrix, int target) {
+        int m=matrix.length,n=matrix[0].length;
+        int x=0,y=n-1;
+        while (x<=m-1&&y>=0){
+            if (matrix[x][y]==target)
+                return true;
+            else if (matrix[x][y]>target)
+                --y;
+            else
+                ++x;
+        }
+        return false;
+    }
+
+//    22.相交链表
+      public class ListNode {
+          int val;
+          ListNode next;
+          ListNode(int x) {
+              val = x;
+              next = null;
+          }
+      }
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA==null||headB==null) return null;
+        ListNode p1=headA,p2=headB;
+        while (p1!=p2){
+            p1= p1==null ? headB : p1.next;
+            p2= p2==null ? headA : p2.next;
+        }
+        return p1;
+    }
 }
